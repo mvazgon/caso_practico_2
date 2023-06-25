@@ -19,3 +19,9 @@ variable "location" {
     default = "spaincentral"
 }
 
+variable "prefix" {
+    type = string
+    description = "Prefijo para las cadenas de este deploy"
+    nullable = false
+    default = "cp2"
+}
