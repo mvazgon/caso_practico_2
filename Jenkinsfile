@@ -5,7 +5,7 @@ pipeline{
         stage("Check if Terraform and Azure-cli are on node"){
             steps{
                 sh '''
-                    az login -u manuel.vazquez605@comunidadunir.net -p nu3l201DVazq_
+                    az login -u manuel.vazquez605@comunidadunir.net -p ${AZURECREDENTIAL}
                '''
             }
         }
