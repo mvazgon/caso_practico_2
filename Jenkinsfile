@@ -1,6 +1,7 @@
 pipeline{
     agent any
     stages{
+
         stage("Check if Terraform and Azure-cli are on node"){
             steps{
                 sh '''
@@ -15,8 +16,6 @@ pipeline{
                 """
                 }                
             }
-            
-        }
         stage(" Chequeamos que estamos ok")
         {
             steps{
@@ -25,5 +24,5 @@ pipeline{
                 """                
             }
         }
-}       
-
+    }     
+}
