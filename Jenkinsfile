@@ -27,7 +27,9 @@ pipeline{
     }     
     post{
         always{
-            deleteDir
+            script{
+                deleteDir
+            }
         }
     }
 }
