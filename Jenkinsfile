@@ -21,7 +21,7 @@ pipeline{
         {
             steps{
                 sh """ 
-                    Semos los mejores
+                    echo "Semos los mejores"
                 """                
             }
         }
