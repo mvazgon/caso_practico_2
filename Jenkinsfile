@@ -12,7 +12,7 @@ pipeline{
         stage("Chequeamos el plan"){
             steps{
                 sh """
-                    cd terraform && terrafom plan
+                    cd terraform && terraform init && terrafom plan
                 """
                 }                
             }
