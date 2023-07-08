@@ -12,7 +12,11 @@ terraform {
   
   }
 }
-#Configuramos el id para conectar a la cuenta de azure
+
+/*
+Configuramos el id para conectar a la cuenta de azure en un futuro
+ será sustituido por un secret que se suministrará como una var de entorno.
+*/
 provider "azurerm" {
   features {}
 
@@ -22,10 +26,11 @@ provider "azurerm" {
   #client_secret     = "<service_principal_password>"
 }
 
-# Creamos las key SSH 
+/*
+Creamos las key SSH 
+pero será usada para crear servicios https.
+*/
 resource "tls_private_key" "rg_cp2_ssh_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
-  }
-
-#Creamos el resource_group bajo el cual construimos todos los objetos de Azure.
+}

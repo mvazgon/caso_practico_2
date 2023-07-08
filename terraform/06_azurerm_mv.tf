@@ -2,18 +2,18 @@
 #Definimos la VM que va a tener los playbooks de vmdocker01
 resource "azurerm_linux_virtual_machine" "rg_cp2_vmdocker" {
   name                            = "rg_cp2_vmdocker"
-  location                        = var.location
-  resource_group_name             = var.name_rg
+  location                        = azurerm_resource_group.rg_cp2.location
+  resource_group_name             = azurerm_resource_group.rg_cp2.name
   network_interface_ids           = [azurerm_network_interface.rg_cp2_nic_vmdocker.id]
-  size                            = "Standard_DS1_v2"
+  size                            = "Standard_B1ls"
   computer_name                   = "vmdocker01"
   admin_username                  = "azureuser"
   disable_password_authentication = true
 
   os_disk {
-    name                 = "myOsDisk"
+    name                 = "myOsDiskvmansible"
     caching              = "ReadWrite"
-    storage_account_type = "Premium_LRS"
+    storage_account_type = "Standard_LRS"
   }
 
   source_image_reference {
@@ -25,25 +25,28 @@ resource "azurerm_linux_virtual_machine" "rg_cp2_vmdocker" {
  
   admin_ssh_key {
     username   = "azureuser"
-    public_key = tls_private_key.rg_cp2_ssh_key.public_key_openssh
+    public_key = file("~/.ssh/id_rsa.pub")
   }
+
+  custom_data = filebase64("scripts/setup.sh")
+  
 }
 
 #Definición de la MV vmansible01
-resource "azurerm_linux_virtual_machine" "rg_cp2_vmansibel"{
+resource "azurerm_linux_virtual_machine" "rg_cp2_vmansible"{
   name                            = "rg_cp2_vmansible"
-  location                        = var.location
-  resource_group_name             = var.name_rg
+  location                        = azurerm_resource_group.rg_cp2.location
+  resource_group_name             = azurerm_resource_group.rg_cp2.name
   network_interface_ids           = [azurerm_network_interface.rg_cp2_nic_vmansible.id]
-  size                            = "Standard_DS1_v2"
+  size                            = "Standard_B1ls"
   computer_name                   = "vmansible01"
   admin_username                  = "azureuser"
   disable_password_authentication = true
 
   os_disk {
-    name                 = "myOsDisk"
+    name                 = "myOsDiskvmdocker"
     caching              = "ReadWrite"
-    storage_account_type = "Premium_LRS"
+    storage_account_type = "Standard_LRS"
   }
 
   source_image_reference {
@@ -55,6 +58,8 @@ resource "azurerm_linux_virtual_machine" "rg_cp2_vmansibel"{
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = tls_private_key.rg_cp2_ssh_key.public_key_openssh
+    public_key = file("~/.ssh/id_rsa.pub")
   }
+
+  custom_data = filebase64("scripts/setup.sh")
 }

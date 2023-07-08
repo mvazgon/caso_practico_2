@@ -16,7 +16,7 @@ variable "location" {
     type = string
     description = "zona donde desplegaremos el rg"
     nullable = false
-    default = "spaincentral"
+    default = "uksouth"
 }
 
 variable "prefix" {
