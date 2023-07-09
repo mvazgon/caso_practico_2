@@ -1,5 +1,6 @@
 # Create virtuals machines
-#Definimos la VM que va a tener los playbooks de vmdocker01
+
+#Definimos la VM que ejecutará los workload de docker/podman de vmdocker01
 resource "azurerm_linux_virtual_machine" "rg_cp2_vmdocker" {
   name                            = "rg_cp2_vmdocker"
   location                        = azurerm_resource_group.rg_cp2.location
@@ -27,11 +28,8 @@ resource "azurerm_linux_virtual_machine" "rg_cp2_vmdocker" {
     username   = "azureuser"
     public_key = file("~/.ssh/id_rsa.pub")
   }
-
-  custom_data = filebase64("scripts/setup.sh")
-  
 }
-
+/*
 #Definición de la MV vmansible01
 resource "azurerm_linux_virtual_machine" "rg_cp2_vmansible"{
   name                            = "rg_cp2_vmansible"
@@ -60,6 +58,6 @@ resource "azurerm_linux_virtual_machine" "rg_cp2_vmansible"{
     username   = "azureuser"
     public_key = file("~/.ssh/id_rsa.pub")
   }
-
-  custom_data = filebase64("scripts/setup.sh")
+  custom_data = filebase64("script/setup.sh")
 }
+*/

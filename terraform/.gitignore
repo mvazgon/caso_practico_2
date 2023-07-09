@@ -1,1 +1,6 @@
 .terraform/
+terraform.state
+terraform.state.backup
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+azurek8s

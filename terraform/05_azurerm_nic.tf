@@ -15,7 +15,7 @@ resource "azurerm_network_interface" "rg_cp2_nic_vmdocker" {
     public_ip_address_id          = azurerm_public_ip.rg_cp2_public_ip_vmdocker.id
   }
 }
-
+/*
 #NIC vmansible
 resource "azurerm_network_interface" "rg_cp2_nic_vmansible" {
   name                = "rg_cp2_nic_vmansible"
@@ -28,3 +28,4 @@ resource "azurerm_network_interface" "rg_cp2_nic_vmansible" {
     private_ip_address_allocation = "Dynamic"
   }
 }
+*/
