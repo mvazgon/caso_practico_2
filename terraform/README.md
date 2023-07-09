@@ -41,6 +41,6 @@ Para ello tenemos que usar el resource: *azurerm_kubernetes_cluster*; que está 
     - ssh_key, dentro de este usamos la key pública que estamos definiendo en otros recursos: key_data = file("~/.ssh/id_rsa.pub")
 - type = "SystemAssigned"
 - recuperación de las credenciales de conexión al cluster, ejecutamos el comando:
-    > $echo "$(terraform output rg_cp2_aks_mvg_kube_config)" > ./azurek8s
+    > $ echo \"$(terraform output rg_cp2_aks_mvg_kube_config)\" > ./azurek8s
 - comprobamos la conexión con el comando:
     > $ kubectl get pods 
