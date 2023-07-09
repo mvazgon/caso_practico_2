@@ -28,19 +28,19 @@ Para este recurso solo depende del resource_group desplegado anteriormente.
 
 ## Creación del Cluster de Kubernetes en Azure (AKS)
 Para ello tenemos que usar el resource: *azurerm_kubernetes_cluster*; que está relacionado con el recurso: *resource_group*; definido para anteriores objetos. Dentro de este objeto tenemos que definir las siguientes propiedades:
->- dns_prefix = "rgcp2aksmvg"
->- default_node_pool, donde definimos los elementos del pool
->> - name , que definimos: "default"
->> - node_count , definimos a 1 para nuestro ejemplo
->> - vm_size , que definimos a:  "Standard_D2_v2"
->- network_profile, donde definimos las caracteristicas de red:
->> - network_plugin = "kubenet"
->> - load_balancer_sku = "standard"
->- linux_profile, que nos permitirá definir las credenciales en el cluster:
->> - admin_username, que definimos con el nombre de: "azureuser"
->> - ssh_key, dentro de este usamos la key pública que estamos definiendo en otros recursos: key_data = file("~/.ssh/id_rsa.pub")
->- type = "SystemAssigned"
+- dns_prefix = "rgcp2aksmvg"
+- default_node_pool, donde definimos los elementos del pool
+    - name , que definimos: "default"
+    - node_count , definimos a 1 para nuestro ejemplo
+    - vm_size , que definimos a:  "Standard_D2_v2"
+- network_profile, donde definimos las caracteristicas de red:
+    - network_plugin = "kubenet"
+    - load_balancer_sku = "standard"
+- linux_profile, que nos permitirá definir las credenciales en el cluster:
+    - admin_username, que definimos con el nombre de: "azureuser"
+    - ssh_key, dentro de este usamos la key pública que estamos definiendo en otros recursos: key_data = file("~/.ssh/id_rsa.pub")
+- type = "SystemAssigned"
 - recuperación de las credenciales de conexión al cluster, ejecutamos el comando:
-    echo "$(terraform output rg_cp2_aks_mvg_kube_config)" > ./azurek8s
+    > $echo "$(terraform output rg_cp2_aks_mvg_kube_config)" > ./azurek8s
 - comprobamos la conexión con el comando:
-    $ kubectl get pods 
+    > $ kubectl get pods 
