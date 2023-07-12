@@ -14,7 +14,8 @@ El caso práctico se divide en tres apartados fundamentales:
 Los siguientes pasos SOLO están definidos para una máquina ubuntu.
 - creamos el par de llaves (privada, pública) para aplicar posteriormente en los diferentes elementos de la infraestructura:
   > ssh-keygen -t rsa -b 4096 (aceptamos por defecto con enter todas las preguntas)
-- instalamos manualmente el paquete básico de ansible,
+- instalamos manualmente el paquete básico de ansible, con los comandos:
+  > apt update && apt install -y ansible
 - aplicamos el playbook de la ruta: ansible/prepara_entorno_linux.yaml ; con el comando:
   > ansible-playbook ansible/prepara_entorno_linux.yaml -c local
 ## Definición y creación de elementos comunes.
