@@ -10,6 +10,13 @@ El caso práctico se divide en tres apartados fundamentales:
    - desplegar desde el ACR la imagen creada anteriormente. 
  - crear un cluster de K8s con el recurso Azure Kubernetes Cluster y recuperar la información para conectar, configurandolo en la máquina local
    - desplegar con ansible un deploy de una imagen de una app con persistencia local.
+## Preparación del entorno desde el que vamos a conectarnos.
+Los siguientes pasos SOLO están definidos para una máquina ubuntu.
+- creamos el par de llaves (privada, pública) para aplicar posteriormente en los diferentes elementos de la infraestructura:
+  > ssh-keygen -t rsa -b 4096 (aceptamos por defecto con enter todas las preguntas)
+- instalamos manualmente el paquete básico de ansible,
+- aplicamos el playbook de la ruta: ansible/prepara_entorno_linux.yaml ; con el comando:
+  > ansible-playbook ansible/prepara_entorno_linux.yaml -c local
 ## Definición y creación de elementos comunes.
 A toda la infraestructura será común:
 - un par de claves privada y pública para crear todos los servicios
@@ -42,5 +49,7 @@ Para ello tenemos que usar el resource: *azurerm_kubernetes_cluster*; que está 
 - type = "SystemAssigned"
 - recuperación de las credenciales de conexión al cluster, ejecutamos el comando:
     > $ echo \"$(terraform output rg_cp2_aks_mvg_kube_config)\" > ./azurek8s
+- copiamos, renombrado el archivo a la ruta: ${HOME}/.kube/config
+- eliminamos las líneas EOT de este archivo editandolo directamente. 
 - comprobamos la conexión con el comando:
     > $ kubectl get pods 
