@@ -29,9 +29,14 @@ Para ello tiraremos de los siguientes recursos:
 - azurerm_public_ip, depende de los anteriores
 - azurerm_network_interface, depende de los anteriores
 - azurerm_linux_virtual_machine, la máquina propiamente dicha y depende de todos los anteriores componentes.
+### Obtener la dirección IP de la MV creada. 
 Tenemos que recuperar del mismo los siguientes elementos:
-- la dirección IP pública
-## Creación del Azure Container Registry
+- la dirección IP pública, tenemos varias opciones:
+  - usando el comando específico de terraform:
+    > terraform output -raw public_ip_address
+  - o si no lo conseguimos obtener asi, este otro método:
+    > grep "public_ip_address\": \"" terraform/terraform.tfstate 
+## Creación del Azure Container Registro
 Para este recurso solo depende del resource_group desplegado anteriormente.
 
 ## Creación del Cluster de Kubernetes en Azure (AKS)
@@ -48,6 +53,7 @@ Para ello tenemos que usar el resource: *azurerm_kubernetes_cluster*; que está 
     - admin_username, que definimos con el nombre de: "azureuser"
     - ssh_key, dentro de este usamos la key pública que estamos definiendo en otros recursos: key_data = file("~/.ssh/id_rsa.pub")
 - type = "SystemAssigned"
+### Recuperación y configuración de las credenciales para acceder al cluster de AKS
 - recuperación de las credenciales de conexión al cluster, ejecutamos el comando:
     > $ echo \"$(terraform output rg_cp2_aks_mvg_kube_config)\" > ./azurek8s
 - copiamos, renombrado el archivo a la ruta: ${HOME}/.kube/config
