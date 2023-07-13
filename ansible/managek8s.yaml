@@ -1,0 +1,7 @@
+---
+[default]
+
+inventory: ./azureinfra.cfg
+
+- name: manage deploy k8s
+  host: akscluster

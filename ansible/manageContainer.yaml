@@ -1,0 +1,35 @@
+---
+- name: test
+  hosts: docker
+  become: yes
+  become_user: root
+  tasks:
+    - name: pintar mensaje
+      debug: msg="funciona"
+    - name: install packages (podman, etc)
+      ansible.builtin.apt:
+        name: 
+          - podman
+          - git
+          - ca-certificates 
+          - curl 
+          - apt-transport-https 
+          - lsb-release 
+          - gnupg
+        state: present
+        update_cache: true
+    - name: download gpg to install azure-cli
+      command:
+        cmd: curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor |tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null && 
+    - name:
+      command:
+        cmd: AZ_REPO=$(lsb_release -cs); echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+
+    - name: Download repository
+      ansible.builtin.git:
+        repo: https://github.com/mvazgon/vscodeserver.git
+        dest: /opt/vscodeserver
+        version: develop
+    - name: Build Images from local cloned repository
+      command:
+        cmd: podman build -t vscodeserver:lastest -f /opt/vscodeserver/

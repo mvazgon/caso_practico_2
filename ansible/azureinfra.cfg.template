@@ -1,0 +1,5 @@
+[all]
+[docker]
+IPSERVER ansible_user=azureuser
+[akscluster]
+FQDNCLUSTER
