@@ -10,6 +10,14 @@ El caso práctico se divide en tres apartados fundamentales:
    - desplegar desde el ACR la imagen creada anteriormente. 
  - crear un cluster de K8s con el recurso Azure Kubernetes Cluster y recuperar la información para conectar, configurandolo en la máquina local
    - desplegar con ansible un deploy de una imagen de una app con persistencia local.
+## Preparación del entorno desde el que vamos a conectarnos.
+Los siguientes pasos SOLO están definidos para una máquina ubuntu.
+- creamos el par de llaves (privada, pública) para aplicar posteriormente en los diferentes elementos de la infraestructura:
+  > ssh-keygen -t rsa -b 4096 (aceptamos por defecto con enter todas las preguntas)
+- instalamos manualmente el paquete básico de ansible, con los comandos:
+  > apt update && apt install -y ansible
+- aplicamos el playbook de la ruta: ansible/prepara_entorno_linux.yaml ; con el comando:
+  > ansible-playbook ansible/prepara_entorno_linux.yaml -c local
 ## Definición y creación de elementos comunes.
 A toda la infraestructura será común:
 - un par de claves privada y pública para crear todos los servicios
@@ -21,9 +29,14 @@ Para ello tiraremos de los siguientes recursos:
 - azurerm_public_ip, depende de los anteriores
 - azurerm_network_interface, depende de los anteriores
 - azurerm_linux_virtual_machine, la máquina propiamente dicha y depende de todos los anteriores componentes.
+### Obtener la dirección IP de la MV creada. 
 Tenemos que recuperar del mismo los siguientes elementos:
-- la dirección IP pública
-## Creación del Azure Container Registry
+- la dirección IP pública, tenemos varias opciones:
+  - usando el comando específico de terraform:
+    > terraform output -raw public_ip_address
+  - o si no lo conseguimos obtener asi, este otro método:
+    > grep "public_ip_address\": \"" terraform/terraform.tfstate 
+## Creación del Azure Container Registro
 Para este recurso solo depende del resource_group desplegado anteriormente.
 
 ## Creación del Cluster de Kubernetes en Azure (AKS)
@@ -40,7 +53,10 @@ Para ello tenemos que usar el resource: *azurerm_kubernetes_cluster*; que está 
     - admin_username, que definimos con el nombre de: "azureuser"
     - ssh_key, dentro de este usamos la key pública que estamos definiendo en otros recursos: key_data = file("~/.ssh/id_rsa.pub")
 - type = "SystemAssigned"
+### Recuperación y configuración de las credenciales para acceder al cluster de AKS
 - recuperación de las credenciales de conexión al cluster, ejecutamos el comando:
     > $ echo \"$(terraform output rg_cp2_aks_mvg_kube_config)\" > ./azurek8s
+- copiamos, renombrado el archivo a la ruta: ${HOME}/.kube/config
+- eliminamos las líneas EOT de este archivo editandolo directamente. 
 - comprobamos la conexión con el comando:
     > $ kubectl get pods 
