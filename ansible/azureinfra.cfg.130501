@@ -1,0 +1,5 @@
+[all]
+[docker]
+20.58.17.148 ansible_user=azureuser
+[k8s]
+ https://rgcp2aksmvg-apgzcsaf.hcp.uksouth.azmk8s.io

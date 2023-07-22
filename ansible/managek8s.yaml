@@ -1,7 +1,20 @@
 ---
-[default]
-
-inventory: ./azureinfra.cfg
-
-- name: manage deploy k8s
-  host: akscluster
+  - name: Deploy vscode image
+    hosts: docker
+    collections:
+      - containers.podman
+    become: yes
+    become_user: root
+    vars:
+      username: 
+      password: 
+    tasks:
+      - name: install packages
+        ansible.builtin.apt:
+          name:
+          - docker
+          - git
+          - curl
+          - apt-transport-https
+          - lsb-release
+          - gnupg

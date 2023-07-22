@@ -1,35 +1,67 @@
 ---
-- name: test
-  hosts: docker
-  become: yes
-  become_user: root
-  tasks:
-    - name: pintar mensaje
-      debug: msg="funciona"
-    - name: install packages (podman, etc)
-      ansible.builtin.apt:
-        name: 
+  - name: Deploy vscode image
+    hosts: docker
+    collections:
+      - containers.podman
+    become: yes
+    become_user: root
+    vars:
+      username: 
+      password: 
+    tasks:
+      - name: install packages
+        ansible.builtin.apt:
+          name:
           - podman
           - git
-          - ca-certificates 
-          - curl 
-          - apt-transport-https 
-          - lsb-release 
+          - curl
+          - apt-transport-https
+          - lsb-release
           - gnupg
-        state: present
-        update_cache: true
-    - name: download gpg to install azure-cli
-      command:
-        cmd: curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor |tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null && 
-    - name:
-      command:
-        cmd: AZ_REPO=$(lsb_release -cs); echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-
-    - name: Download repository
-      ansible.builtin.git:
-        repo: https://github.com/mvazgon/vscodeserver.git
-        dest: /opt/vscodeserver
-        version: develop
-    - name: Build Images from local cloned repository
-      command:
-        cmd: podman build -t vscodeserver:lastest -f /opt/vscodeserver/
+          state: present
+          update_cache: true
+      - name: copy script create repo for azure-cli
+        ansible.builtin.copy:
+          src: script/updaterepoazure.sh
+          dest: /tmp/updaterepoazure.sh
+          owner: root
+          group: root
+          mode: '0700' 
+      - name: install azure-cli repo
+        command:
+          cmd: /tmp/updaterepoazure.sh
+      - name: download repo
+        ansible.builtin.git:
+          repo: https://github.com/mvazgon/vscodeserver.git
+          dest: /opt/vscodeserver
+          version: develop 
+      - name: build image from local cloned repo
+        command: 
+          cmd: podman build -t vscodeserver:latest /opt/vscodeserver/
+      - name: copia script runpod.sh
+        copy:
+          src: script/runpod.sh
+          dest: /tmp/runpod.sh
+          owner: root
+          group: root
+          mode: "0700"
+      - name: run script runpod.sh
+        command:
+          cmd: /tmp/runpod.sh
+      - name: copia script obtener password
+        copy:
+          src: script/obtenerpassword.sh
+          dest: /tmp/obtenerpassword.sh
+          owner: root
+          group: root
+          mode: "0700"
+      - name: obtener password
+        ansible.builtin.command:
+          argv: 
+            - /bin/bash
+            - -c 
+            - /tmp/obtenerpassword.sh 
+        register: password
+      - name: ver password
+        debug: 
+          msg: "{{ password.stdout }}"

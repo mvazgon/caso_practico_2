@@ -7,7 +7,7 @@ resource "azurerm_network_security_group" "rg_cp2_nsg" {
   security_rule       = [
     {
       access                                     = "Allow"
-      description                                = "Acceso via SSG"
+      description                                = "Acceso via SSH"
       destination_address_prefix                 = ""
       destination_address_prefixes               = [azurerm_network_interface.rg_cp2_nic_vmdocker.ip_configuration[0].private_ip_address]
       destination_application_security_group_ids = []
@@ -21,6 +21,24 @@ resource "azurerm_network_security_group" "rg_cp2_nsg" {
       source_address_prefixes                    = []
       source_application_security_group_ids      = []
       source_port_range                          = "22"
+      source_port_ranges                         = []
+    },
+    {
+      access                                     = "Allow"
+      description                                = "Acceso via HTTPS"
+      destination_address_prefix                 = ""
+      destination_address_prefixes               = [azurerm_network_interface.rg_cp2_nic_vmdocker.ip_configuration[0].private_ip_address]
+      destination_application_security_group_ids = []
+      destination_port_range                     = "443"
+      destination_port_ranges                    = []
+      direction                                  = "Inbound"
+      name                                       = "HTTPS"
+      priority                                   = 1002
+      protocol                                   = "Tcp"
+      source_address_prefix                      = "0.0.0.0/0"
+      source_address_prefixes                    = []
+      source_application_security_group_ids      = []
+      source_port_range                          = "443"
       source_port_ranges                         = []
     }
   ]

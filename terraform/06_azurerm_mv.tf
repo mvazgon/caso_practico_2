@@ -6,7 +6,7 @@ resource "azurerm_linux_virtual_machine" "rg_cp2_vmdocker" {
   location                        = azurerm_resource_group.rg_cp2.location
   resource_group_name             = azurerm_resource_group.rg_cp2.name
   network_interface_ids           = [azurerm_network_interface.rg_cp2_nic_vmdocker.id]
-  size                            = "Standard_B1ls"
+  size                            = "Standard_DS2_v2"
   computer_name                   = "vmdocker01"
   admin_username                  = "azureuser"
   disable_password_authentication = true

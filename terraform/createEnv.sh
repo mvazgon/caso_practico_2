@@ -14,3 +14,7 @@ $PUBLICIP ansible_user=azureuser
 [k8s]
 $K8S
 EOF
+
+export ACRUSER=$(terraform output -raw rg_cp2_acr_adminUsername)
+export ACRPASS=$(terraform output -raw rg_cp2_acr_adminUserpassword)
+export ACRSERVER=$(terraform output -raw rg_cp2_acr_login_server)
