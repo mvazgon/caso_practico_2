@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  mailhog_auth_file.cfg: |
+    mailhog:$2a$04$f6IfOVIdC7jgMkZbHkmgBOoF7VmrE9I03m0X.qeDOPYYkhjezqVIm
+kind: ConfigMap
+metadata:
+  name: mailhog-auth
+  namespace: mailhog

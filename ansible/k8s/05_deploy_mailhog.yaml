@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailhog-deploy
+  namespace: mailhog
+  labels:
+    app: mailhog-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailhog-deploy
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mailhog-deploy 
+    spec:
+      volumes:
+      - name: mailhog-maildir
+        persistentVolumeClaim:
+          claimName: mailhog-pvc
+      - name: mailhog-auth
+        configMap:
+          name: mailhog-auth
+      - name: mailhog-smtp
+        configMap:
+          name: mailhog-smtp
+      containers:
+      - image: mailhog/mailhog
+        name: mailhog
+        env:
+        - name: MH_HOSTNAME
+          value: "test.mailhog"
+        - name: MH_STORAGE
+          value: maildir        
+        - name: MH_MAILDIR_PATH
+          value: /maildir
+        - name: MH_AUTH_FILE
+          value: /opt/mailhog_auth_file.cfg
+        - name: MH_OUTGOING_SMTP
+          value: /opt/mailhog_smtp_out.cfg
+        ports:
+        - containerPort: 8025
+          name: http-access
+        - containerPort: 1025
+          name: smtp-access
+        volumeMounts:
+          - mountPath: /maildir
+            name: mailhog-maildir
+          - name: mailhog-auth
+            mountPath: "/opt/mailhog_auth_file.cfg"
+            subPath: "mailhog_auth_file.cfg"
+          - name: mailhog-smtp
+            mountPath: "/opt/mailhog_smtp_out.cfg"
+            subPath: "mailhog_smtp_out.cfg"

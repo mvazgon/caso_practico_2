@@ -1,0 +1,45 @@
+---
+- hosts: localhost 
+  collections:
+  - kubernetes.core
+  tasks:
+    - name: create namespace
+      kubernetes.core.k8s:
+        state: present
+        src: k8s/01_namespace_mailhog.yaml
+    - name: create pvc 
+      kubernetes.core.k8s:
+        state: present
+        src: k8s/02_pvc_mailhog.yaml
+    - name: Creacion secret token usuario
+      kubernetes.core.k8s:
+        state: present
+        src: k8s/03_secret_mailhog.yaml
+    - name: Creación autenticación bcode64 mailhog
+      kubernetes.core.k8s:
+        state: present
+        src: k8s/04a_configmap_mailhog.yaml
+    - name: Creación configmap que toma valores de entorno
+      kubernetes.core.k8s:
+        state: present
+        src: k8s/04b_configmap_mailhog.yaml
+    - name: configmap q establece las variables de entorno para enviar correo usando un smtp autenticado.
+      kubernetes.core.k8s:
+        state: present
+        src: k8s/04c_configmap_mailhog.yaml
+    - name: Creación del deployment 
+      kubernetes.core.k8s: 
+        state: present
+        src: k8s/05_deploy_mailhog.yaml
+    - name: creación del servicio balanceado para acceder al deploy
+      kubernetes.core.k8s:
+        state: present
+        src: k8s/06_svc_mailhog.yaml
+    - name: Obtener la dirección IP del servicio loadbalancer con el que desplegamos el deploy de mailhog
+      kubernetes.core.k8s_info:
+        kind: service
+        namespace: mailhog
+        name: mailhog
+      register: service_loadbalancer_data
+    - debug:
+        var: service_loadbalancer_data

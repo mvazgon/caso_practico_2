@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mailhog-smtp
+  namespace: mailhog
+data:
+  mailhog_smtp_out.cfg: |
+    {
+      "server_name": {
+        "name": "$mh_server_name",
+        "host": "$mh_smtp_out_fqdn",
+        "port": "$mh_smtp_out_port",
+        "email": "$mh_smtp_out_email",
+        "user": "$mh_smtp_out_user",
+        "password": "$mh_smtp_out_userpassword",
+        "mechanism": "$mh_smtp_out_mechanism"
+      }
+    }
+
