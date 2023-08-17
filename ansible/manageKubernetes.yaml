@@ -35,11 +35,3 @@
       kubernetes.core.k8s:
         state: present
         src: k8s/06_svc_mailhog.yaml
-    - name: Obtener la dirección IP del servicio loadbalancer con el que desplegamos el deploy de mailhog
-      kubernetes.core.k8s_info:
-        kind: service
-        namespace: mailhog
-        name: mailhog
-      register: service_loadbalancer_data
-    - debug:
-        var: service_loadbalancer_data
